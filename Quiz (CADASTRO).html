@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="quizEstilo.css">
+</head>
+<body>
+
+    <video autoplay loop muted id="video-fundo">
+        <source src="Vídeo_de_Trocas_Animadas_Criado.mp4" type="video/mp4">
+        Seu navegador não suporta a tag de vídeo
+    </video>
+
+    <div class="quiz-container">
+        <h1>Quiz</h1>
+        <div id="quiz">
+            <p id="pergunta"></p>
+            <div id="opcoes"></div>
+            <button onclick="proximaPergunta()">Próxima Pergunta</button>
+        </div>
+        <div id="resultado" class="hidden">
+            <h2>Resultado Final</h2>
+            <p id="mensagem"></p>
+            <button onclick="reiniciarQuiz()">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <audio id="erroSound" src="somDeErro.mp3"></audio>
+    <audio id="successSound" src="somDeAcerto.mp3"></audio>
+    <audio id="finalSound" src="somFinal.mp3"></audio>
+
+<script>
+const perguntas = [
+    {
+        pergunta: "Qual é a capital do Brasil?",
+        opcoes: ["Rio de Janeiro", "Brasília", "São Paulo", "Salvador"],
+        resposta: "Brasília"
+    },
+    {
+        pergunta: "Quantos planetas existem no sistema solar?",
+        opcoes: ["7", "8", "9", "10"],
+        resposta: "8"
+    }
+    // Adicione mais perguntas aqui
+];     
+let indiceAtual = 0;
+let acertos = 0;
+let respostaSelecionada = "";
+
+function carregarPergunta() {
+    const perguntaAtual = perguntas[indiceAtual];
+    document.getElementById("pergunta").textContent = perguntaAtual.pergunta;
+
+    const opcoesContainer = document.getElementById("opcoes");
+    opcoesContainer.innerHTML = "";
+    respostaSelecionada ="";
+
+    perguntaAtual.opcoes.forEach(opcao => {
+        const botao = document.createElement("button");
+        botao.textContent = opcao;
+        botao.classList.add("opcao");
+        botao.onclick = () => {
+            const botoes = document.querySelectorAll(".opcao");
+            botoes.forEach(b => b.style.backgroundColor = "#ffffff");
+
+            botao.style.backgroundColor = "#4a47ff";
+            respostaSelecionada = opcao;
+        };
+        opcoesContainer.appendChild(botao);
+    });
+}
+function proximaPergunta() {
+    if (respostaSelecionada === ""){
+        alert("Por favor, selecione uma resposta antes de continuar.");
+        return;
+    }
+
+    const perguntaAtual = perguntas[indiceAtual];
+    if (respostaSelecionada === perguntaAtual.resposta) {
+        acertos++;
+        document.getElementById("successSound").play(); // Toca som de Acerto
+    } else{
+        document.getElementById("erroSound").play(); // Toca som de Erro
+    }
+
+    indiceAtual++;
+    if (indiceAtual < perguntas.length){
+        carregarPergunta();
+    } else {
+        mostrarResultado();
+    }
+}
+
+function mostrarResultado() {
+    document.getElementById("quiz").classList.add("hidden");
+    document.getElementById("resultado").classList.remove("hidden");
+
+    let total = perguntas.length;
+    let erros = total - acertos;
+
+    document.getElementById("mensagem").innerHTML = `
+        Você acertou <strong>${acertos}</strong> de ${total} perguntas!<br>
+        Você errou <strong>${erros}</strong>.
+    `;
+
+    document.getElementById("finalSound").play(0.1); // Toca som Final
+}
+
+function reiniciarQuiz() {
+    indiceAtual = 0;
+    acertos = 0;
+    document.getElementById("resultado").classList.add("hidden");
+    document.getElementById("quiz").classList.remove("hidden");
+    carregarPergunta();
+}
+
+carregarPergunta();
+
+    </script>
+    </body>
+</html>

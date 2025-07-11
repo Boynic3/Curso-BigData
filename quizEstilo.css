@@ -1,0 +1,60 @@
+#video-fundo{
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -100;
+    object-fit: cover;
+}
+
+body{
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #222;
+    color: 4a47ff;
+    margin: 0;
+    padding: 20px;
+}
+
+.quiz-container {
+    background-color: rgba(96, 125, 139, 0.7); /* 0.7 = 70% de opacidade (30% transparente) */
+    padding: 20px;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 500px;
+    margin: auto;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+}
+
+button {
+    background-color: #4a47ff;
+    border: none;
+    padding: 10px;
+    margin-top: 15px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #3e3bff;
+}
+
+.hidden {
+    display: none;
+}
+
+.opcao {
+    display: block;
+    background-color: #b2dbee;
+    margin: 5px 0;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    
+}
+
+.opcao:hover {
+    background-color: #a0c4e6;
+}

@@ -1,0 +1,32 @@
+/* PÁGINA 1*/
+body{
+    background-color: #ffa07a;    
+    img{
+        border-radius: 75px;
+    }
+}
+
+h1{
+    color: #607d8b;
+    text-align: center;
+    font-size: 80px;
+}
+
+#titulo{
+    color: aquamarine;
+}
+
+.subtitulo{
+    color: #054c6f;
+
+}
+
+/* PÁGINA 2*/
+#cordapagina{
+    background-color: #e9865f;    
+
+}
+
+#h1_pg2:hover{
+    color: #4a47ff;
+}
