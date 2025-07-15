@@ -4,6 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrocaFácil - Plataforma de Troca de Produtos Usados</title>
+
+<!--Chatbot-->
+    <div class="container-chatbot">
+        <div id="janela-chat" class="janela-chat hidden">                                <!--JANELA DO CHAT OCULTA INICIALMENTE-->
+            <div class="header-chat">                                                    <!--Cabeçalho do chat-->
+                <div class="header-chat-titulo">                                         <!--Título do chat-->
+                    <h3>Fale com Scambot</h3>                                            <!--Nome do Chat-->
+                        <select id="seletor=ia" class="seletor-ia">                      <!--Seletor de IA-->
+                            <option value="gemini">Gemini (Padrão)</option>              <!--Opção para o Gemini-->
+                            <option value="claude" disabled>Claude (Em breve)</option>   <!--Opção para o Claude (desativada)-->
+                        </select>                                                        <!--Fim do seletor de IA-->
+                </div>                                                                   <!--Fim do título do chat-->
+                <button id="btn-fechar-chat">&times;</button>                            <!--Botão para fechar o chat-->
+            </div>                                                                       <!--Fim do cabeçalho do chat-->
+            <div id="corpo-chat" class="corpo-chat">                                     <!--Corpo do chat onde as mensagens serão exibidas-->
+                <div class="mensagem-bot">                                               <!--Mensagem inicial do bot-->
+                    <span>Olá! Eu sou o Scambot, seu assistente virtual. Como posso ajudar você hoje?</span>
+                </div>                                                                   <!--Fim da mensagem inicial do bot-->
+            </div>                                                                       <!--Fim do corpo do chat-->
+            <div class="rodape-chat">                                                    <!--Rodapé do Chat-->
+                <input type="text" id="input-chat" placeholder="Digite sua pergunta..."> <!--Input para digitar mensagem-->
+                <button id="btn-enviar-chat">                                            <!--Botão de enviar a mensagem-->
+                    <ion-icon name="send-outline"></ion-icon>                            <!--Ícone de envio-->
+                </button>                                                                <!--Fim do botão de enviar-->
+            </div>                                                                       <!--Fim do rodapé do chat--> 
+        </div>                                                                           <!--Fim da janela do chat-->   
+        <button id="btn-abrir-chat" class="btn-abrir-chat">                              <!--Botão para abrir o chat-->
+            <ion-icon name="chatbubbles-outline"></ion-icon>                             <!--Ícone de chat-->
+        </button>                                                                        <!--Fim do botão para abrir o chat-->
+    </div>                                                                               <!--Fim do container do chatbot-->
+    <script src="Script do Scambot.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
