@@ -1,7 +1,7 @@
 //Lógica do Menu Mobile
 const btnMobile = document.getElementById('btn-mobile');    //Botão do menu mobile
 const menuItens = document.getElementById('menu-mobile-itens');     //Seleciona o menu mobile
-btnMobile.addEventListener('click',()=> {                 //Adciona um evento de cliqque ao botão do menu mobile
+btnMobile.addEventListener('click', () => {                 //Adciona um evento de cliqque ao botão do menu mobile
     menuItens.classList.toggle('hidden');
 });       //Fim da lógica do menu mobile
 
@@ -18,7 +18,7 @@ const seletorIA = document.getElementById('seletor-ia');      //Seletor para esc
 let historicoChat = [];
 
 const CHAVES_API = {
-    gemini: "AIzaSyAaoEkLRE4dJY67pNPXJjmaDuUJsmgIN-Q", //Chave da API do Gemini
+    gemini: "SUA_CHAVE_GEMINI_AQUI", //Chave da API do Gemini
     claude: "SUA_CHAVE_CLAUDE_AQUI", //Chave da API do Claude (ainda não configurada)
 
 };                           //Fim das chaves de API
