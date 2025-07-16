@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TrocaFácil - Plataforma de Troca de Produtos Usados</title>
-
+    <link rel="stylesheet" href="EstiloChatBot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="DeepSite TrocaFacil.css">
 <!--Chatbot-->
     <div class="container-chatbot">
         <div id="janela-chat" class="janela-chat hidden">                                <!--JANELA DO CHAT OCULTA INICIALMENTE-->
@@ -36,67 +38,7 @@
     </div>                                                                               <!--Fim do container do chatbot-->
     <script src="Script do Scambot.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary: #4F46E5;
-            --secondary: #10B981;
-            --dark: #1F2937;
-            --light: #F3F4F6;
-        }
-        
-        .gradient-bg {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-        }
-        
-        .product-card {
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        
-        .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .category-chip {
-            transition: all 0.2s ease;
-        }
-        
-        .category-chip:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .animated-underline {
-            position: relative;
-        }
-        
-        .animated-underline::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: -2px;
-            left: 0;
-            background-color: var(--primary);
-            transition: width 0.3s ease;
-        }
-        
-        .animated-underline:hover::after {
-            width: 100%;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0px); }
-        }
-        
-        .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-    </style>
+
 </head>
 <body class="bg-gray-50 font-sans">
     <!-- Header/Navbar -->

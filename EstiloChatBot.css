@@ -1,4 +1,146 @@
 /*Chatbot */
-.container-chatbot{
+.container-chatbot {
     position: fixed;
+    bottom:1.25rem;
+    right: 1.25rem;
+    z-index: 100;
+}
+
+.btn-abrir-chat {
+    background-color: #0bf5da;
+    color: white;
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform:
+translateY(0);}
+    40%{ transform: translateY(-15px);}
+    60%{ transform: translateY(-7px);}
+}
+
+.janela-chat {
+    width: 350px;
+    height: 500px;
+    background-color: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.header-chat {
+    background-color: #f59e0b;
+    color: white;
+    padding: 1 rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-chat-título {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.header-chat h3 {
+    font-weight: 600;
+    margin:0;
+}
+
+.seletor-ia {
+    background-color:#d97706;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    padding: 0.1rem 0.3rem;
+    margin-top: 4px;
+    outline: none;
+    cursor: pointer;
+}
+
+.header-chat-button {
+    background: none;
+    border: none;
+    color:white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.corpo-chat {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.mensagem-bot, .mensagem-usuario {
+    display: flex;
+    max-width: 80%;
+}
+
+.mensagem-bot span, .mensagem-usuario span {
+    padding: 0.5rem 0.75rem;
+    border-radius: 1rem;
+    line-height: 1.4;
+}
+
+.mensagem-bot {
+    align-self: flex-start;
+}
+
+.mensagem-bot span {
+    background-color: #e5e7eb;
+}
+
+.mensagem-usuario {
+    align-self: flex-end;
+}
+
+.mensagem-usuario span {
+    background-color: #f59e0b;
+    color: white;
+}
+
+.mensagem-bot.digitando span {
+    color: #6b7280;
+    font-style: italic;
+}
+
+.rodape-chat {
+    display: flex;
+    padding: 0.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+
+#input-chat {
+    flex: 1;
+    border: none;
+    padding:0.5rem;
+    font-size: 1rem;
+    outline:none;
+}
+
+#btn-enviar-chat {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #f59e0b;
+    cursor: pointer;
+    padding: 0.5rem;
 }
