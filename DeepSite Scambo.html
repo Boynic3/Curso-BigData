@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scambo - Plataforma de Troca de Produtos Usados</title>
     <link rel="stylesheet" href="EstiloChatBot.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="DeepSite Scambo.css">
-<!--Chatbot-->
+    <style>body{visibility:hidden;}</style>
+
+</head>
+<body class="bg-gray-50 font-sans" onload="document.body.style.visibility='visible'">
+
+    <!--Chatbot-->
     <div class="container-chatbot">
         <div id="janela-chat" class="janela-chat hidden">                                <!--JANELA DO CHAT OCULTA INICIALMENTE-->
             <div class="header-chat">                                                    <!--Cabeçalho do chat-->
                 <div class="header-chat-titulo">                                         <!--Título do chat-->
                     <h3>Fale com Scambot</h3>                                            <!--Nome do Chat-->
-                        <select id="seletor=ia" class="seletor-ia">                      <!--Seletor de IA-->
+                        <select id="seletor-ia" class="seletor-ia">                      <!--Seletor de IA-->
                             <option value="gemini">Gemini (Padrão)</option>              <!--Opção para o Gemini-->
                             <option value="claude" disabled>Claude (Em breve)</option>   <!--Opção para o Claude (desativada)-->
                         </select>                                                        <!--Fim do seletor de IA-->
-                </div>                                                                   <!--Fim do título do chat-->
+                </div>          
+                <button id="btn-mobile" class="menu-mobile-btn">                         <!--Botão para abrir o menu em dispositivos móveis-->
+                    <ion-icon name="menu-outline"></ion-icon>                            <!--Ícone do menu para dispositivos móveis-->
+                </button>                                                                <!--Fim do título do chat-->
                 <button id="btn-fechar-chat">&times;</button>                            <!--Botão para fechar o chat-->
             </div>                                                                       <!--Fim do cabeçalho do chat-->
             <div id="corpo-chat" class="corpo-chat">                                     <!--Corpo do chat onde as mensagens serão exibidas-->
@@ -35,12 +44,9 @@
         <button id="btn-abrir-chat" class="btn-abrir-chat">                              <!--Botão para abrir o chat-->
             <ion-icon name="chatbubbles-outline"></ion-icon>                             <!--Ícone de chat-->
         </button>                                                                        <!--Fim do botão para abrir o chat-->
-    </div>                                                                               <!--Fim do container do chatbot-->
-    <script src="Script do Scambot.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
+    </div>                                                                  <!--Fim do container do chatbot-->
 
-</head>
-<body class="bg-gray-50 font-sans">
+
     <!-- Header/Navbar -->
     <header class="bg-white shadow-sm sticky top-0 z-50">
         <div class="container mx-auto px-4 py-3 flex justify-between items-center">
@@ -427,7 +433,7 @@
                     <ul class="space-y-2">
                         <li class="flex items-center">
                             <i class="fas fa-envelope mr-2 text-gray-400"></i>
-                            <span class="text-gray-400">contato@trocafacil.com</span>
+                            <span class="text-gray-400">contato@scambo.com</span>
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-phone-alt mr-2 text-gray-400"></i>
@@ -440,4 +446,7 @@
                     </ul>
                 </div>
             </div>
+    <script src="Script do Scambot.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</body>          
 </html>

@@ -18,7 +18,7 @@ const seletorIA = document.getElementById('seletor-ia');      //Seletor para esc
 let historicoChat = [];
 
 const CHAVES_API = {
-    gemini: "SUA_CHAVE_GEMINI_AQUI", //Chave da API do Gemini
+    gemini: "AIzaSyDYzEJROEInI12DL8Jr62qt5dYiRWIw9xQ", //Chave da API do Gemini
     claude: "SUA_CHAVE_CLAUDE_AQUI", //Chave da API do Claude (ainda não configurada)
 
 };                           //Fim das chaves de API
@@ -42,7 +42,7 @@ const enviarMensagem = async () => { //Função para enviar a mensagem do usuár
     adcionarMensagemNaTela(mensagemUsuario, 'mensagem-usuario'); //Adiciona a mensagem do usuário na tela
     inputChat.value = ""; //Limpa o input de texto após enviar a mensagem
 
-    historicoChat.push({ role: 'user', parts:[{text:mensagemUsuario}]  }); //Adiciona a mensagem do usuário no histórico
+    historicoChat.push({ role: 'user', parts:[{ text: mensagemUsuario }]  }); //Adiciona a mensagem do usuário no histórico
 
     const divDigitando = adcionarMensagemNaTela('Digitando...', 'mensagem-bot-digitando'); //Adiciona a mensagem de "Digitando..." na tela
     
@@ -95,7 +95,7 @@ async function obterRespostaDoGemini() {//Função para obter a resposta do Gemi
         contents: historicoChat,  //Inclui o histórico de mensagens para contexto
         systemInstruction:{ //Instrução do sistema para o modelo
             parts:[{ // Parte da instrução do sistema
-                text: "Você é um assistente virtual amigável, engraçado e com uma inteligência extrema da 'Escola de Tecnologia Futuro'.Responda à seguinte pergunta de forma concisa e útil." // Texto da instrução do sistema
+                text: "Você é o Scambot, o assistente oficial e super prestativo do Scambo, que guia cada usuário de forma intuitiva, proativa, amigável e acessível para encontrar, publicar e finalizar trocas de itens usados com facilidade e segurança, antecipando suas necessidades e resolvendo dúvidas rapidamente. Responda à seguinte pergunta de forma concisa e útil." // Texto da instrução do sistema
             }]//Fim da parte da instrução do sistema
         }//Fim da instrução do sistema
 
@@ -121,7 +121,6 @@ async function obterRespostaDoGemini() {//Função para obter a resposta do Gemi
 } //Fim da função obterRespostaDoGemini
 
 btnEnviarChat.addEventListener('click', enviarMensagem); // Adciona um evento de clique ao botão de enviar chat para chamar a função enviarMensagem
-
 inputChat.addEventListener('keypress',(e) => { //Adciona um evento de tecla pressionada ao input de chat
     if(e.key==='Enter') enviarMensagem(); //Se a tecla pressionada for Enter, chama a função enviarMensagem
 }); //Fim do evento de tecla pressionada
