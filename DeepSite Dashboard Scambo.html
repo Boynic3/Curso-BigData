@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scambo - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #4F46E5 0%, #10B981 100%);
+        }
+        .product-card {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        .category-chip {
+            transition: all 0.2s ease;
+        }
+        .category-chip:hover {
+            background-color: #4F46E5;
+            color: white;
+        }
+        .animated-underline {
+            position: relative;
+        }
+        .animated-underline::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #4F46E5;
+            transition: width 0.3s ease;
+        }
+        .animated-underline:hover::after {
+            width: 100%;
+        }
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        /* Estilos do Chatbot */
+        .container-chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .btn-abrir-chat {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #4F46E5;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .btn-abrir-chat:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .janela-chat {
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header-chat {
+            padding: 15px;
+            background-color: #4F46E5;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-chat-titulo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .seletor-ia {
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: none;
+            font-size: 12px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .seletor-ia option {
+            color: black;
+        }
+        .btn-fechar-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .corpo-chat {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        .mensagem-bot, .mensagem-usuario, .mensagem-bot-digitando {
+            margin-bottom: 15px;
+            padding: 10px 15px;
+            border-radius: 18px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+        .mensagem-bot {
+            background-color: white;
+            border-top-left-radius: 5px;
+            align-self: flex-start;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .mensagem-usuario {
+            background-color: #4F46E5;
+            color: white;
+            border-top-right-radius: 5px;
+            margin-left: auto;
+        }
+        .mensagem-bot-digitando {
+            background-color: white;
+            border-top-left-radius: 5px;
+            align-self: flex-start;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            color: #666;
+            font-style: italic;
+        }
+        .rodape-chat {
+            padding: 15px;
+            background-color: white;
+            display: flex;
+            border-top: 1px solid #eee;
+        }
+        .input-chat {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+        }
+        .btn-enviar-chat {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #4F46E5;
+            color: white;
+            border: none;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        /* Sidebar */
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .sidebar-collapsed {
+            width: 70px;
+        }
+        .sidebar-expanded {
+            width: 250px;
+        }
+        .sidebar-item-collapsed {
+            justify-content: center;
+        }
+        .sidebar-item-expanded {
+            justify-content: flex-start;
+            padding-left: 20px;
+        }
+        .main-content-expanded {
+            margin-left: 250px;
+        }
+        .main-content-collapsed {
+            margin-left: 70px;
+        }
+        /* Toggle switch */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #4F46E5;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #4F46E5;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <!-- Sidebar -->
+    <div class="sidebar bg-white shadow-md fixed h-full sidebar-expanded" id="sidebar">
+        <div class="p-4 flex items-center justify-between border-b">
+            <div class="flex items-center space-x-2">
+                <i class="fas fa-exchange-alt text-2xl text-indigo-600"></i>
+                <h1 class="text-xl font-bold text-gray-800">Scambo</h1>
+            </div>
+            <button id="sidebar-toggle" class="text-gray-500 hover:text-indigo-600">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="p-4">
+            <div class="flex items-center mb-6">
+                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
+                    <i class="fas fa-user text-indigo-600"></i>
+                </div>
+                <div>
+                    <p class="font-medium">João Silva</p>
+                    <p class="text-xs text-gray-500">Usuário Premium</p>
+                </div>
+            </div>
+            
+            <nav class="mt-8">
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 bg-indigo-50 text-indigo-600">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-box-open mr-3"></i>
+                    <span>Meus Produtos</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-search mr-3"></i>
+                    <span>Buscar Trocas</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-comments mr-3"></i>
+                    <span>Mensagens</span>
+                    <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-heart mr-3"></i>
+                    <span>Favoritos</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-cog mr-3"></i>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+            
+            <div class="mt-8 border-t pt-4">
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-question-circle mr-3"></i>
+                    <span>Ajuda</span>
+                </a>
+                <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg hover:bg-gray-100 text-gray-700">
+                    <i class="fas fa-sign-out-alt mr-3"></i>
+                    <span>Sair</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content main-content-expanded ml-250" id="main-content">
+        <!-- Header -->
+        <header class="bg-white shadow-sm sticky top-0 z-40">
+            <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h2 class="text-xl font-bold text-gray-800">Dashboard</h2>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <input type="text" placeholder="Buscar..." class="pl-10 pr-4 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                    </div>
+                    
+                    <div class="relative">
+                        <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 relative">
+                            <i class="fas fa-bell"></i>
+                            <span class="absolute top-0 right-0 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">3</span>
+                        </button>
+                    </div>
+                    
+                    <div class="flex items-center space-x-2">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center">
+                            <i class="fas fa-user text-indigo-600"></i>
+                        </div>
+                        <span class="hidden md:inline">João Silva</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="container mx-auto px-4 py-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Produtos Cadastrados</p>
+                            <h3 class="text-2xl font-bold">12</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center">
+                            <i class="fas fa-box-open text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-500 text-sm font-medium">+2 na última semana</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Trocas Realizadas</p>
+                            <h3 class="text-2xl font-bold">5</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-green-100 text-green-600 flex items-center justify-center">
+                            <i class="fas fa-handshake text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-500 text-sm font-medium">+1 este mês</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Mensagens Não Lidas</p>
+                            <h3 class="text-2xl font-bold">3</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center">
+                            <i class="fas fa-comments text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-red-500 text-sm font-medium">2 novas hoje</span>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500">Avaliação Média</p>
+                            <h3 class="text-2xl font-bold">4.8</h3>
+                        </div>
+                        <div class="w-12 h-12 rounded-full bg-yellow-100 text-yellow-600 flex items-center justify-center">
+                            <i class="fas fa-star text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <div class="flex text-yellow-400">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts and Recent Activity -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <!-- Trocas Mensais -->
+                <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Trocas Mensais</h3>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-sm text-gray-500">Ano: 2023</span>
+                            <select class="border rounded px-2 py-1 text-sm">
+                                <option>2023</option>
+                                <option>2022</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="monthlyTradesChart"></canvas>
+                    </div>
+                </div>
+                
+                <!-- Recent Activity -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold mb-4">Atividade Recente</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-indigo-100 text-indigo-600 flex items-center justify-center mr-3 mt-1">
+                                <i class="fas fa-exchange-alt text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Troca realizada</p>
+                                <p class="text-xs text-gray-500">Você trocou seu iPhone por um Notebook Dell</p>
+                                <p class="text-xs text-gray-400">2 dias atrás</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3 mt-1">
+                                <i class="fas fa-comment text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Nova mensagem</p>
+                                <p class="text-xs text-gray-500">Maria interessada no seu tênis Nike</p>
+                                <p class="text-xs text-gray-400">1 dia atrás</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3 mt-1">
+                                <i class="fas fa-heart text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Novo favorito</p>
+                                <p class="text-xs text-gray-500">Carlos favoritou sua bicicleta Caloi</p>
+                                <p class="text-xs text-gray-400">3 dias atrás</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="w-8 h-8 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3 mt-1">
+                                <i class="fas fa-bell text-sm"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Notificação</p>
+                                <p class="text-xs text-gray-500">Novo produto que pode te interessar</p>
+                                <p class="text-xs text-gray-400">5 dias atrás</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="mt-4 text-sm text-indigo-600 hover:underline">Ver todas as atividades</button>
+                </div>
+            </div>
+            
+            <!-- Recent Products and Messages -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <!-- Meus Produtos Recentes -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Meus Produtos Recentes</h3>
+                        <button class="text-sm text-indigo-600 hover:underline">Ver todos</button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+                            <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden mr-4">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="iPhone" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">iPhone 11 64GB</h4>
+                                <p class="text-sm text-gray-500">Publicado em 15/10/2023</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded">Eletrônicos</span>
+                                    <span class="ml-auto text-sm font-medium text-indigo-600">3 interessados</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+                            <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden mr-4">
+                                <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Tênis" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Tênis Nike Air Max</h4>
+                                <p class="text-sm text-gray-500">Publicado em 10/10/2023</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Vestuário</span>
+                                    <span class="ml-auto text-sm font-medium text-indigo-600">5 interessados</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+                            <div class="w-16 h-16 bg-gray-200 rounded-lg overflow-hidden mr-4">
+                                <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Livros" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="font-medium">Coleção Harry Potter</h4>
+                                <p class="text-sm text-gray-500">Publicado em 05/10/2023</p>
+                                <div class="flex items-center mt-1">
+                                    <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded">Livros</span>
+                                    <span class="ml-auto text-sm font-medium text-indigo-600">2 interessados</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="mt-4 w-full py-2 border border-indigo-600 text-indigo-600 rounded-lg hover:bg-indigo-50 transition">
+                        Adicionar Novo Produto
+                    </button>
+                </div>
+                
+                <!-- Mensagens Recentes -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold">Mensagens Recentes</h3>
+                        <button class="text-sm text-indigo-600 hover:underline">Ver todas</button>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg border-l-4 border-indigo-500">
+                            <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-4">
+                                <img src="https://randomuser.me/api/portraits/women/32.jpg" alt="User" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-medium">Ana Carolina</h4>
+                                    <span class="text-xs text-gray-500">10:30</span>
+                                </div>
+                                <p class="text-sm text-gray-500 truncate">Olá! Estou interessada no seu iPhone. Podemos negociar?</p>
+                            </div>
+                            <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-4">
+                                <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-medium">Ricardo Silva</h4>
+                                    <span class="text-xs text-gray-500">Ontem</span>
+                                </div>
+                                <p class="text-sm text-gray-500 truncate">Aceitaria trocar os livros por uma guitarra?</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center p-3 hover:bg-gray-50 rounded-lg">
+                            <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-4">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="User" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center justify-between">
+                                    <h4 class="font-medium">Juliana Santos</h4>
+                                    <span class="text-xs text-gray-500">Ontem</span>
+                                </div>
+                                <p class="text-sm text-gray-500 truncate">Obrigada pela troca! Quando podemos nos encontrar?</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4 relative">
+                        <input type="text" placeholder="Digite uma mensagem..." class="w-full pl-4 pr-10 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        <button class="absolute right-2 top-2 text-indigo-600">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recommended Products -->
+            <div class="mt-8">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold">Produtos Recomendados para Você</h3>
+                    <button class="text-sm text-indigo-600 hover:underline">Ver mais</button>
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Product 1 -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Notebook" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                Eletrônicos
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Notebook Dell i5</h3>
+                            <p class="text-gray-600 text-sm mb-3">8GB RAM, SSD 256GB, tela Full HD</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Smartphone</span>
+                                <button class="text-gray-500 hover:text-indigo-600">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 2 -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Tênis" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded">
+                                Vestuário
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Tênis Adidas</h3>
+                            <p class="text-gray-600 text-sm mb-3">Tamanho 41, novo na caixa</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Moletom</span>
+                                <button class="text-gray-500 hover:text-indigo-600">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 3 -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1589998059171-988d887df646?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Livro" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-yellow-600 text-white text-xs px-2 py-1 rounded">
+                                Livros
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">O Poder do Hábito</h3>
+                            <p class="text-gray-600 text-sm mb-3">Edição de capa dura, como novo</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Outros livros</span>
+                                <button class="text-gray-500 hover:text-indigo-600">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Product 4 -->
+                    <div class="product-card bg-white rounded-lg overflow-hidden">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1558981852-426c6c22a060?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Bicicleta" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                                Esportes
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Bicicleta Monark</h3>
+                            <p class="text-gray-600 text-sm mb-3">Aro 29, 21 marchas, revisada</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Patins</span>
+                                <button class="text-gray-500 hover:text-indigo-600">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="container-chatbot">
+        <div id="janela-chat" class="janela-chat hidden">
+            <div class="header-chat">
+                <div class="header-chat-titulo">
+                    <h3>Fale com Scambot</h3>
+                    <select id="seletor-ia" class="seletor-ia">
+                        <option value="gemini">Gemini (Padrão)</option>
+                        <option value="claude" disabled>Claude (Em breve)</option>
+                    </select>
+                </div>
+                <button id="btn-fechar-chat">&times;</button>
+            </div>
+            <div id="corpo-chat" class="corpo-chat">
+                <div class="mensagem-bot">
+                    <span>Olá! Eu sou o Scambot, seu assistente virtual. Como posso ajudar você hoje?</span>
+                </div>
+            </div>
+            <div class="rodape-chat">
+                <input type="text" id="input-chat" class="input-chat" placeholder="Digite sua pergunta...">
+                <button id="btn-enviar-chat" class="btn-enviar-chat">
+                    <ion-icon name="send-outline"></ion-icon>
+                </button>
+            </div>
+        </div>
+        
+        <button id="btn-abrir-chat" class="btn-abrir-chat">
+            <ion-icon name="chatbubbles-outline"></ion-icon>
+        </button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Sidebar Toggle
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('main-content');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('sidebar-expanded');
+            sidebar.classList.toggle('sidebar-collapsed');
+            mainContent.classList.toggle('main-content-expanded');
+            mainContent.classList.toggle('main-content-collapsed');
+            
+            // Update sidebar items
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                item.classList.toggle('sidebar-item-expanded');
+                item.classList.toggle('sidebar-item-collapsed');
+            });
+        });
+        
+        // Monthly Trades Chart
+        const monthlyTradesCtx = document.getElementById('monthlyTradesChart').getContext('2d');
+        const monthlyTradesChart = new Chart(monthlyTradesCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                datasets: [{
+                    label: 'Trocas Realizadas',
+                    data: [2, 3, 1, 4, 2, 3, 5, 4, 3, 6, 4, 5],
+                    backgroundColor: '#4F46E5',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+        
+        // Product Cards Hover Effect
+        const productCards = document.querySelectorAll('.product-card');
+        productCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-5px)';
+                card.style.boxShadow = '0 10px 15px rgba(0, 0, 0, 0.1)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = '';
+                card.style.boxShadow = '';
+            });
+        });
+        
+        // Favorite Button Toggle
+        const favoriteButtons = document.querySelectorAll('.product-card button');
+        favoriteButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const icon = button.querySelector('i');
+                if (icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'text-red-500');
+                } else {
+                    icon.classList.remove('fas', 'text-red-500');
+                    icon.classList.add('far');
+                }
+            });
+        });
+        
+        // Chatbot Logic
+        const btnAbrirChat = document.getElementById('btn-abrir-chat');
+        const btnFecharChat = document.getElementById('btn-fechar-chat');
+        const janelaChat = document.getElementById('janela-chat');
+        const corpoChat = document.getElementById('corpo-chat');
+        const inputChat = document.getElementById('input-chat');
+        const btnEnviarChat = document.getElementById('btn-enviar-chat');
+        const seletorIA = document.getElementById('seletor-ia');
+
+        let historicoChat = [];
+
+        btnAbrirChat.addEventListener('click', () => {
+            janelaChat.classList.remove('hidden');
+            btnAbrirChat.classList.add('hidden');
+            corpoChat.scrollTop = corpoChat.scrollHeight;
+        });
+
+        btnFecharChat.addEventListener('click', () => {
+            janelaChat.classList.add('hidden');
+            btnAbrirChat.classList.remove('hidden');
+        });
+
+        const enviarMensagem = async () => {
+            const mensagemUsuario = inputChat.value.trim();
+            if(mensagemUsuario === "") return;
+
+            adcionarMensagemNaTela(mensagemUsuario, 'mensagem-usuario');
+            inputChat.value = "";
+
+            historicoChat.push({ role: 'user', parts:[{ text: mensagemUsuario }] });
+
+            const divDigitando = adcionarMensagemNaTela('Digitando...', 'mensagem-bot-digitando');
+
+            const iaSelecionada = seletorIA.value;
+
+            try {
+                // Simulate AI response
+                const respostasPossiveis = [
+                    "Entendi sua pergunta sobre como funciona o sistema de trocas. Você pode cadastrar seus itens e procurar por produtos de outros usuários para negociar uma troca.",
+                    "Para adicionar um novo produto, clique no botão 'Adicionar Novo Produto' no seu dashboard e preencha os detalhes do item.",
+                    "Você tem 3 mensagens não lidas. Gostaria que eu as lesse para você?",
+                    "Sua última troca foi realizada com sucesso! O que mais posso ajudar?",
+                    "Vejo que você tem interesse em eletrônicos. Posso recomendar alguns produtos que podem te interessar."
+                ];
+                
+                const respostaIA = respostasPossiveis[Math.floor(Math.random() * respostasPossiveis.length)];
+                
+                // Simulate typing delay
+                setTimeout(() => {
+                    divDigitando.remove();
+                    adcionarMensagemNaTela(respostaIA, 'mensagem-bot');
+                    historicoChat.push({ role: "model", parts:[{text:respostaIA}] });
+                }, 1500);
+            } catch (error) {
+                console.error("Erro ao obter resposta da IA:", error);
+                divDigitando.remove();
+                adcionarMensagemNaTela("Desculpe, ocorreu um erro ao processar sua solicitação.", 'mensagem-bot');
+                historicoChat.pop();
+            }
+        };
+
+        function adcionarMensagemNaTela(texto, classe) {
+            const divMensagem = document.createElement('div');
+            divMensagem.className = classe;
+            divMensagem.innerHTML = `<span>${texto}</span>`;
+            corpoChat.appendChild(divMensagem);
+            corpoChat.scrollTop = corpoChat.scrollHeight;
+            return divMensagem;
+        }
+
+        btnEnviarChat.addEventListener('click', enviarMensagem);
+        inputChat.addEventListener('keypress', (e) => {
+            if(e.key === 'Enter') enviarMensagem();
+        });
+    </script>
+</body>
+</html>

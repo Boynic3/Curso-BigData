@@ -61,8 +61,7 @@
                 <a href="#" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Como Funciona</a>
                 <a href="#" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Sobre Nós</a>
                 
-                <a href="index.html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Index</a>
-                <a href="pagina2.html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Página 2</a>
+                <a href="DeepSite Dashboard Scambo.html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Dashboard(Teste)</a>
                 <a href="Quiz (CADASTRO).html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Quiz</a>
             </nav>
             
@@ -74,13 +73,13 @@
                     <i class="fas fa-bell"></i>
                 </button>
                 <button class="hidden md:block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
-                    Entrar
+                     <a href="Forms_Melhor.html">Entrar</a>
                 </button>
                 <button class="md:hidden p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200">
                     <i class="fas fa-bars"></i>
                 </button>
             </div>
-        </div>
+        </div>    
     </header>
 
     <!-- Hero Section -->
@@ -107,7 +106,7 @@
     <!-- How It Works -->
     <section class="py-16 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Como funciona a TrocaFácil?</h2>
+            <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">Como funciona o Scambo?</h2>
             
             <div class="grid md:grid-cols-3 gap-8">
                 <div class="text-center p-6 rounded-lg bg-gray-50 hover:shadow-md transition">
@@ -392,7 +391,7 @@
                 <div>
                     <div class="flex items-center space-x-2 mb-4">
                         <i class="fas fa-exchange-alt text-2xl text-indigo-400"></i>
-                        <h3 class="text-xl font-bold">TrocaFácil</h3>
+                        <h3 class="text-xl font-bold">Scambo</h3>
                     </div>
                     <p class="text-gray-400 mb-4">A plataforma mais fácil para trocar produtos usados sem gastar dinheiro.</p>
                     <div class="flex space-x-4">
@@ -447,6 +446,26 @@
                 </div>
             </div>
     <script src="Script do Scambot.js"></script>
+    
+    <!--Funcionalidade de alternância do botão de favoritos (coração)-->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const favoriteButtons = document.querySelectorAll('.product-card button, .btn-favorito');
+        favoriteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const icon = button.querySelector('i');
+                if (icon && icon.classList.contains('far')) {
+                    icon.classList.remove('far');
+                    icon.classList.add('fas', 'text-red-500');
+                } else if (icon) {
+                    icon.classList.remove('fas', 'text-red-500');
+                    icon.classList.add('far');
+                }
+            });
+        });
+    });
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
 </body>          
 </html>

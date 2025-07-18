@@ -18,7 +18,7 @@ const seletorIA = document.getElementById('seletor-ia');      //Seletor para esc
 let historicoChat = [];
 
 const CHAVES_API = {
-    gemini: "COLOCAR CHAVE TODA VEZ", //Chave da API do Gemini
+    gemini: "AIzaSyDYzEJROEInI12DL8Jr62qt5dYiRWIw9xQ", //Chave da API do Gemini
     claude: "SUA_CHAVE_CLAUDE_AQUI", //Chave da API do Claude (ainda não configurada)
 
 };                           //Fim das chaves de API
@@ -124,5 +124,6 @@ btnEnviarChat.addEventListener('click', enviarMensagem); // Adciona um evento de
 inputChat.addEventListener('keypress',(e) => { //Adciona um evento de tecla pressionada ao input de chat
     if(e.key==='Enter') enviarMensagem(); //Se a tecla pressionada for Enter, chama a função enviarMensagem
 }); //Fim do evento de tecla pressionada
+
 
 //Fim do script do Chatbot
