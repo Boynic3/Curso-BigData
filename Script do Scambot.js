@@ -1,7 +1,7 @@
 //Lógica do Menu Mobile
 const btnMobile = document.getElementById('btn-mobile');    //Botão do menu mobile
 const menuItens = document.getElementById('menu-mobile-itens');     //Seleciona o menu mobile
-btnMobile.addEventListener('click', () => {                 //Adciona um evento de cliqque ao botão do menu mobile
+btnMobile.addEventListener('click', () => {                 //Adciona um evento de clique ao botão do menu mobile
     menuItens.classList.toggle('hidden');
 });       //Fim da lógica do menu mobile
 
@@ -18,7 +18,7 @@ const seletorIA = document.getElementById('seletor-ia');      //Seletor para esc
 let historicoChat = [];
 
 const CHAVES_API = {
-    gemini: "COLOCAR CHAVE AQUI", //Chave da API do Gemini
+    gemini: "AIzaSyDYzEJROEInI12DL8Jr62qt5dYiRWIw9xQ", //Chave da API do Gemini
     claude: "SUA_CHAVE_CLAUDE_AQUI", //Chave da API do Claude (ainda não configurada)
 
 };                           //Fim das chaves de API
@@ -83,47 +83,32 @@ async function obterRespostaDaIA(provedor) {//Função para obter a resposta da 
     }//Fim da função obterRespostaDaIa
 }//Fim da função obterRespostaDaIa
 
-async function obterRespostaDoGemini() {//Função para obter a resposta do Gemini
-    const apiKey = CHAVES_API.gemini; //Obtém a chave da API do Gemini
-    if(!apiKey){//Se a chave da API não estiver configurada
-        return "A chave da API do Gemini não foi configurada.";//Retorna uma mensagem de erro informando que a chave não foi configurada
-    } //Fim da verificação da chave da API
+// Integração com backend Gemini
+async function obterRespostaDoGemini() {
+    const apiUrl = `http://localhost:3000/api/chat`; //Endpoint local
 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`; //Define a URL da API do Gemini com a chave da API
+    //Configura requisição
+    const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: { 'Content-type': 'application/json'},
+        body: JSON.stringify({ historicoChat }) //Envia o histórico
+    });
+
+    // Trata erros de rede/HTTP
+    if (!response.ok) {
+        throw new Error(`Erro no servidor: ${response.statusText}`);
+    }
     
-    const payload = { //O payload agora contém o histórico da conversa
-        contents: historicoChat,  //Inclui o histórico de mensagens para contexto
-        systemInstruction:{ //Instrução do sistema para o modelo
-            parts:[{ // Parte da instrução do sistema
-                text: "Você é o Scambot, o assistente oficial e super prestativo do Scambo, que guia cada usuário de forma intuitiva, proativa, amigável e acessível para encontrar, publicar e finalizar trocas de itens usados com facilidade e segurança, antecipando suas necessidades e resolvendo dúvidas rapidamente. Responda à seguinte pergunta de forma concisa e útil." // Texto da instrução do sistema
-            }]//Fim da parte da instrução do sistema
-        }//Fim da instrução do sistema
+    // Processa resposta JSON
+    const result = await response.json();
+    return result.resposta || "Sem resposta disponível";
+}
 
-    };   //Fim do payload
-
-    const response = await fetch(apiUrl, {  //Faz uma requisição para a API do Gemini
-        method: 'POST', //Define o método como POST
-        headers: {'Content-type': 'application/json'},   //Define o cabeçalho Content-Type como JSON
-        body: JSON.stringify(payload)   //Converte o payload para JSON
-    }); //Fim da requisição fetch
-
-    if(!response.ok){ //Se a resposta da API não for OK
-        throw new Error(`Erro na API do Gemini: ${response.statusText}`);   //Lança um erro com o status da resposta
-    } //Fim da verificação da resposta
-    
-    const result = await response.json(); //Converte a resposta da API para JSON
-
-    if(result.candidates && result.candidates.length > 0) { //Se houver candidatos na resposta
-        return result.candidates[0].content.parts[0].text; //Retorna o texto da primeira parte do primeiro candidato
-    } else{ //Se não houver candidatos na resposta
-        return "Não consegui gerar uma resposta no momento."; //Retorna uma mensagem de erro informando que não foi possível gerar uma resposta
-    } //Fim da verificação dos candidatos
-} //Fim da função obterRespostaDoGemini
-
-btnEnviarChat.addEventListener('click', enviarMensagem); // Adciona um evento de clique ao botão de enviar chat para chamar a função enviarMensagem
-inputChat.addEventListener('keypress',(e) => { //Adciona um evento de tecla pressionada ao input de chat
-    if(e.key==='Enter') enviarMensagem(); //Se a tecla pressionada for Enter, chama a função enviarMensagem
-}); //Fim do evento de tecla pressionada
+// Eventos de envio (clique no botão e tecla Enter)
+btnEnviarChat.addEventListener('click', enviarMensagem);
+inputChat.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') enviarMensagem();
+});
 
 
 //Fim do script do Chatbot
