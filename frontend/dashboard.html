@@ -182,26 +182,57 @@
         }
         /* Sidebar */
         .sidebar {
-            transition: all 0.3s ease;
+            transition: width 0.3s cubic-bezier(.4,0,.2,1);
+            overflow: hidden;
         }
         .sidebar-collapsed {
-            width: 70px;
+            width: 64px;
         }
         .sidebar-expanded {
-            width: 250px;
+            width: 240px;
         }
-        .sidebar-item-collapsed {
-            justify-content: center;
+        .sidebar-content {
+            transition: opacity 0.2s;
         }
-        .sidebar-item-expanded {
-            justify-content: flex-start;
-            padding-left: 20px;
+        .sidebar-collapsed .sidebar-content {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .sidebar-collapsed .sidebar-user,
+        .sidebar-collapsed .sidebar-item span,
+        .sidebar-collapsed .sidebar-bottom,
+        .sidebar-collapsed .sidebar-logo {
+            display: none !important;
+        }
+        .sidebar-toggle-btn {
+            transition: right 0.3s, transform 0.3s;
+        }
+        .sidebar-collapsed .sidebar-toggle-btn {
+            right: 50%;
+            transform: translateX(50%);
+        }
+        .sidebar-expanded .sidebar-toggle-btn {
+            right: 1rem;
+            transform: none;
+        }
+        .sidebar-item {
+            transition: padding 0.3s, justify-content 0.3s;
+        }
+        .sidebar-collapsed .sidebar-item {
+            justify-content: center !important;
+            padding-left: 0 !important;
+        }
+        .sidebar-expanded .sidebar-item {
+            justify-content: flex-start !important;
+            padding-left: 16px !important;
         }
         .main-content-expanded {
-            margin-left: 250px;
+            margin-left: 240px;
+            transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
         }
         .main-content-collapsed {
-            margin-left: 70px;
+            margin-left: 64px;
+            transition: margin-left 0.3s cubic-bezier(.4,0,.2,1);
         }
         /* Toggle switch */
         .toggle-checkbox:checked {
@@ -216,17 +247,21 @@
 <body class="bg-gray-50 font-sans">
     <!-- Sidebar -->
     <div class="sidebar bg-white shadow-md fixed h-full sidebar-expanded" id="sidebar">
-        <div class="p-4 flex items-center justify-between border-b">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-exchange-alt text-2xl text-indigo-600"></i>
-                <h1 class="text-xl font-bold text-gray-800">Scambo</h1>
+        <div class="relative">
+            <div class="p-4 flex items-center justify-between border-b sidebar-logo">
+                <div class="flex items-center space-x-2">
+                    <a href="#" class="flex items-center space-x-2 group" style="text-decoration: none;">
+                        <i class="fas fa-exchange-alt text-2xl text-indigo-600 group-hover:text-indigo-800 transition"></i>
+                        <span class="text-xl font-bold text-gray-800 group-hover:text-indigo-800 transition">Scambo</span>
+                    </a>
+                </div>
             </div>
-            <button id="sidebar-toggle" class="text-gray-500 hover:text-indigo-600">
+            <button id="sidebar-toggle" class="sidebar-toggle-btn text-gray-500 hover:text-indigo-600 absolute top-4 right-4 z-20">
                 <i class="fas fa-bars"></i>
             </button>
         </div>
-        <div class="p-4">
-            <div class="flex items-center mb-6">
+        <div class="sidebar-content p-4">
+            <div class="sidebar-user flex items-center mb-6">
                 <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
                     <i class="fas fa-user text-indigo-600"></i>
                 </div>
@@ -235,7 +270,6 @@
                     <p class="text-xs text-gray-500">Usuário Premium</p>
                 </div>
             </div>
-            
             <nav class="mt-8">
                 <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 bg-indigo-50 text-indigo-600">
                     <i class="fas fa-tachometer-alt mr-3"></i>
@@ -263,8 +297,7 @@
                     <span>Configurações</span>
                 </a>
             </nav>
-            
-            <div class="mt-8 border-t pt-4">
+            <div class="sidebar-bottom mt-8 border-t pt-4">
                 <a href="#" class="sidebar-item flex items-center py-3 px-2 rounded-lg mb-2 hover:bg-gray-100 text-gray-700">
                     <i class="fas fa-question-circle mr-3"></i>
                     <span>Ajuda</span>
@@ -698,17 +731,18 @@
         const sidebarToggle = document.getElementById('sidebar-toggle');
         
         sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('sidebar-expanded');
-            sidebar.classList.toggle('sidebar-collapsed');
-            mainContent.classList.toggle('main-content-expanded');
-            mainContent.classList.toggle('main-content-collapsed');
-            
-            // Update sidebar items
-            const sidebarItems = document.querySelectorAll('.sidebar-item');
-            sidebarItems.forEach(item => {
-                item.classList.toggle('sidebar-item-expanded');
-                item.classList.toggle('sidebar-item-collapsed');
-            });
+            const isCollapsed = sidebar.classList.contains('sidebar-collapsed');
+            if (isCollapsed) {
+                sidebar.classList.remove('sidebar-collapsed');
+                sidebar.classList.add('sidebar-expanded');
+                mainContent.classList.remove('main-content-collapsed');
+                mainContent.classList.add('main-content-expanded');
+            } else {
+                sidebar.classList.remove('sidebar-expanded');
+                sidebar.classList.add('sidebar-collapsed');
+                mainContent.classList.remove('main-content-expanded');
+                mainContent.classList.add('main-content-collapsed');
+            }
         });
         
         // Monthly Trades Chart

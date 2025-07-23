@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scambo - Plataforma de Troca de Produtos Usados</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        .animated-underline {
+            position: relative;
+            text-decoration: none;
+        }
+        .animated-underline:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: #6366f1;
+            transition: width 0.3s ease;
+        }
+        .animated-underline:hover:after {
+            width: 100%;
+        }
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .product-card {
+            transition: all 0.3s ease;
+        }
+        .category-chip:hover {
+            transform: scale(1.05);
+        }
+        .category-chip {
+            transition: all 0.2s ease;
+        }
+        /* Chatbot styles */
+        .container-chatbot {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .btn-abrir-chat {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #6366f1;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .btn-abrir-chat:hover {
+            background-color: #4f46e5;
+            transform: scale(1.1);
+        }
+        .janela-chat {
+            width: 350px;
+            height: 500px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .header-chat {
+            padding: 15px;
+            background-color: #6366f1;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-chat-titulo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .seletor-ia {
+            padding: 3px 8px;
+            border-radius: 5px;
+            border: none;
+            font-size: 12px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .seletor-ia option {
+            color: #333;
+        }
+        .btn-fechar-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .corpo-chat {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        .mensagem-bot {
+            background-color: white;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .rodape-chat {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+        #input-chat {
+            flex: 1;
+            padding: 10px 15px;
+            border-radius: 20px;
+            border: 1px solid #ddd;
+            outline: none;
+        }
+        #btn-enviar-chat {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #6366f1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hidden {
+            display: none;
+        }
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+        .breadcrumb a {
+            color: #6366f1;
+            text-decoration: none;
+        }
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+        .breadcrumb span {
+            margin: 0 8px;
+            color: #9ca3af;
+        }
+        .product-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .product-gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .product-gallery img:hover {
+            opacity: 0.8;
+        }
+        .main-image {
+            grid-column: span 4;
+        }
+        .product-tabs {
+            margin-top: 30px;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .tab-button {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6b7280;
+            position: relative;
+        }
+        .tab-button.active {
+            color: #6366f1;
+        }
+        .tab-button.active:after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: #6366f1;
+        }
+        .tab-content {
+            padding: 20px 0;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .offer-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        .offer-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .filter-section {
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .filter-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .filter-options {
+            margin-top: 10px;
+        }
+        .filter-option {
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        .filter-option input {
+            margin-right: 10px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .page-item {
+            margin: 0 5px;
+        }
+        .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .page-link.active {
+            background-color: #6366f1;
+            color: white;
+        }
+        .page-link:hover:not(.active) {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+
+    <!-- Header/Navbar -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <a href="produtos.html" class="flex items-center space-x-2 group" style="text-decoration: none;">
+                    <i class="fas fa-exchange-alt text-2xl text-indigo-600 group-hover:text-indigo-800 transition"></i>
+                    <span class="text-xl font-bold text-gray-800 group-hover:text-indigo-800 transition">Scambo</span>
+                </a>
+            </div>
+
+            <nav class="hidden md:flex space-x-8">
+                <a href="index.html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Início</a>
+                <a href="produtos.html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Produtos</a>
+                <a href="index.html#como-funciona" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Como Funciona</a>
+                <a href="index.html#sobre-nos" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Sobre Nós</a>
+                <a href="dashboard.html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Dashboard</a>
+                <a href="Quiz (CADASTRO).html" class="animated-underline text-gray-700 hover:text-indigo-600 font-medium">Quiz</a>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" onclick="window.location.href='produtos.html'">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" onclick="window.location.href='dashboard.html'">
+                    <i class="fas fa-bell"></i>
+                </button>
+                <button class="hidden md:block px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition">
+                    <a href="cadastro.html">Entrar</a>
+                </button>
+                <button class="md:hidden p-2 rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200" onclick="window.location.href='produtos.html'">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Página de Produtos -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="breadcrumb">
+            <a href="index.html">Início</a>
+            <span>/</span>
+            <a href="produtos.html">Produtos</a>
+        </div>
+
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Filtros -->
+            <div class="w-full md:w-1/4">
+                <div class="filter-section">
+                    <div class="filter-title">
+                        <span>Categorias</span>
+                        <i class="fas fa-chevron-down text-sm"></i>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-electronics" checked>
+                            <label for="cat-electronics">Eletrônicos</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-clothing">
+                            <label for="cat-clothing">Vestuário</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-books">
+                            <label for="cat-books">Livros</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-sports">
+                            <label for="cat-sports">Esportes</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cat-instruments">
+                            <label for="cat-instruments">Instrumentos</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section mt-4">
+                    <div class="filter-title">
+                        <span>Condição</span>
+                        <i class="fas fa-chevron-down text-sm"></i>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="cond-new">
+                            <label for="cond-new">Novo</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cond-good" checked>
+                            <label for="cond-good">Bom estado</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="cond-used">
+                            <label for="cond-used">Usado</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section mt-4">
+                    <div class="filter-title">
+                        <span>Tipo de Troca</span>
+                        <i class="fas fa-chevron-down text-sm"></i>
+                    </div>
+                    <div class="filter-options">
+                        <div class="filter-option">
+                            <input type="checkbox" id="trade-direct">
+                            <label for="trade-direct">Troca direta</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="trade-multiple">
+                            <label for="trade-multiple">Troca múltipla</label>
+                        </div>
+                        <div class="filter-option">
+                            <input type="checkbox" id="trade-cash">
+                            <label for="trade-cash">Troca + dinheiro</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lista de Produtos -->
+            <div class="w-full md:w-3/4">
+                <div class="flex justify-between items-center mb-6">
+                    <h1 class="text-2xl font-bold text-gray-800">Todos os Produtos</h1>
+                    <div class="flex items-center">
+                        <span class="mr-2 text-sm text-gray-600">Ordenar por:</span>
+                        <select class="border rounded-md px-3 py-1 text-sm">
+                            <option>Mais recentes</option>
+                            <option>Mais populares</option>
+                            <option>Melhor avaliados</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Product 1 -->
+                    <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Smartphone" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                Eletrônicos
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">iPhone 11 64GB</h3>
+                            <p class="text-gray-600 text-sm mb-3">Bom estado, com capa e película</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Notebook</span>
+                                <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Product 2 -->
+                    <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1555529669-e69e7aa0ba9a?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Tênis" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-green-600 text-white text-xs px-2 py-1 rounded">
+                                Vestuário
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Tênis Nike Air Max</h3>
+                            <p class="text-gray-600 text-sm mb-3">Tamanho 42, pouco uso</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Moletom</span>
+                                <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Product 3 -->
+                    <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Livros" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-yellow-600 text-white text-xs px-2 py-1 rounded">
+                                Livros
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Coleção Harry Potter</h3>
+                            <p class="text-gray-600 text-sm mb-3">7 livros em ótimo estado</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Outros livros</span>
+                                <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Product 4 -->
+                    <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1594035910387-fea47794261f?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Bicicleta" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                                Esportes
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Bicicleta Caloi 10</h3>
+                            <p class="text-gray-600 text-sm mb-3">Ano 2018, revisada recentemente</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Patins</span>
+                                <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Product 5 - Instrumento -->
+                    <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Violão" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded">
+                                Instrumentos
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">Violão Giannini</h3>
+                            <p class="text-gray-600 text-sm mb-3">Modelo N10, com case</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: Guitarra</span>
+                                <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- Product 6 - Eletrônico -->
+                    <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                        <div class="relative h-48 bg-gray-200 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Notebook" class="w-full h-full object-cover">
+                            <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                Eletrônicos
+                            </div>
+                        </div>
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-1">MacBook Pro 2017</h3>
+                            <p class="text-gray-600 text-sm mb-3">128GB SSD, 8GB RAM</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-indigo-600 font-medium">Troca por: iPhone</span>
+                                <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="pagination mt-8">
+                    <a href="#" class="page-item">
+                        <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                    </a>
+                    <a href="#" class="page-item">
+                        <span class="page-link active">1</span>
+                    </a>
+                    <a href="#" class="page-item">
+                        <span class="page-link">2</span>
+                    </a>
+                    <a href="#" class="page-item">
+                        <span class="page-link">3</span>
+                    </a>
+                    <a href="#" class="page-item">
+                        <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Página de Detalhes do Produto (exemplo) -->
+    <div id="product-detail-page" class="hidden">
+        <main class="container mx-auto px-4 py-8">
+            <div class="breadcrumb">
+                <a href="index.html">Início</a>
+                <span>/</span>
+                <a href="products.html">Produtos</a>
+                <span>/</span>
+                <a href="category-electronics.html">Eletrônicos</a>
+                <span>/</span>
+                <span>iPhone 11 64GB</span>
+            </div>
+
+            <div class="flex flex-col lg:flex-row gap-8">
+                <!-- Galeria de Imagens -->
+                <div class="w-full lg:w-1/2">
+                    <div class="product-gallery">
+                        <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="iPhone 11" class="main-image">
+                        <img src="https://images.unsplash.com/photo-1580913428735-bd3c269d6a82?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="iPhone 11">
+                        <img src="https://images.unsplash.com/photo-1580913428735-bd3c269d6a82?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="iPhone 11">
+                        <img src="https://images.unsplash.com/photo-1580913428735-bd3c269d6a82?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="iPhone 11">
+                    </div>
+                </div>
+
+                <!-- Informações do Produto -->
+                <div class="w-full lg:w-1/2">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <span class="bg-indigo-100 text-indigo-800 text-xs font-medium px-2.5 py-0.5 rounded">Eletrônicos</span>
+                                <h1 class="text-2xl font-bold mt-2">iPhone 11 64GB</h1>
+                                <p class="text-gray-600 mt-1">Anunciado por: <a href="#" class="text-indigo-600">João Silva</a></p>
+                            </div>
+                            <button class="text-gray-500 hover:text-red-500 text-2xl btn-favorito">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+
+                        <div class="mt-6">
+                            <h3 class="font-semibold">Condição:</h3>
+                            <div class="flex items-center mt-1">
+                                <div class="flex text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <span class="ml-2 text-gray-600">Bom estado</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <h3 class="font-semibold">Descrição:</h3>
+                            <p class="mt-1 text-gray-600">
+                                iPhone 11 64GB na cor preto, em bom estado de conservação. 
+                                Possui pequenos riscos na traseira (quase imperceptíveis) e 
+                                na tela (apenas visíveis com a tela desligada). 
+                                Vem com capa de silicone original e película de vidro aplicada.
+                            </p>
+                        </div>
+
+                        <div class="mt-6">
+                            <h3 class="font-semibold">Troca por:</h3>
+                            <ul class="mt-1 list-disc list-inside text-gray-600">
+                                <li>Notebook em bom estado</li>
+                                <li>iPad com capacidade similar</li>
+                                <li>Outros smartphones + dinheiro</li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-8 pt-6 border-t border-gray-200">
+                            <h3 class="font-semibold">Localização:</h3>
+                            <p class="mt-1 text-gray-600 flex items-center">
+                                <i class="fas fa-map-marker-alt mr-2 text-indigo-600"></i>
+                                São Paulo, SP - Zona Sul
+                            </p>
+                        </div>
+
+                        <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                            <button class="px-6 py-3 bg-indigo-600 text-white font-medium rounded-md hover:bg-indigo-700 transition flex-1">
+                                <i class="fas fa-exchange-alt mr-2"></i> Propor Troca
+                            </button>
+                            <button class="px-6 py-3 border border-indigo-600 text-indigo-600 font-medium rounded-md hover:bg-indigo-50 transition flex-1">
+                                <i class="fas fa-comment-alt mr-2"></i> Chat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abas de Detalhes -->
+            <div class="mt-12 product-tabs">
+                <div class="tab-buttons">
+                    <button class="tab-button active" data-tab="details">Detalhes</button>
+                    <button class="tab-button" data-tab="specs">Especificações</button>
+                    <button class="tab-button" data-tab="offers">Ofertas (3)</button>
+                    <button class="tab-button" data-tab="reviews">Avaliações</button>
+                </div>
+
+                <div id="details" class="tab-content active">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-semibold mb-4">Mais informações sobre o produto</h3>
+                        <p class="text-gray-600">
+                            Este iPhone 11 foi comprado em dezembro de 2020 e sempre foi usado com capa e película. 
+                            A bateria está com 87% de saúde e dura o dia todo com uso moderado. 
+                            Nunca caiu no chão ou teve contato com água. 
+                            Todos os acessórios estão inclusos: carregador original, cabo lightning e fones de ouvido (não utilizados).
+                        </p>
+                    </div>
+                </div>
+
+                <div id="specs" class="tab-content">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-semibold mb-4">Especificações técnicas</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-medium">Marca:</p>
+                                <p class="text-gray-600">Apple</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Modelo:</p>
+                                <p class="text-gray-600">iPhone 11</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Capacidade:</p>
+                                <p class="text-gray-600">64GB</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Cor:</p>
+                                <p class="text-gray-600">Preto</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Tela:</p>
+                                <p class="text-gray-600">6.1" Liquid Retina HD</p>
+                            </div>
+                            <div>
+                                <p class="font-medium">Câmera:</p>
+                                <p class="text-gray-600">Dupla 12MP (ultra-wide e wide)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="offers" class="tab-content">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-semibold mb-4">Ofertas recebidas</h3>
+                        
+                        <div class="offer-card">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-3">
+                                    <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-medium">Carlos Oliveira</p>
+                                    <p class="text-sm text-gray-500">2 dias atrás</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-3">Notebook Dell Inspiron i5, 8GB RAM, 256GB SSD - 2019</p>
+                            <div class="flex justify-between">
+                                <span class="text-indigo-600 font-medium">Avaliação: 4.8/5</span>
+                                <button class="px-4 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                                    Responder
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="offer-card">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-3">
+                                    <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-medium">Ana Beatriz</p>
+                                    <p class="text-sm text-gray-500">1 semana atrás</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-3">iPad 7ª geração 128GB + R$ 200,00</p>
+                            <div class="flex justify-between">
+                                <span class="text-indigo-600 font-medium">Avaliação: 4.5/5</span>
+                                <button class="px-4 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                                    Responder
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="offer-card">
+                            <div class="flex items-center mb-3">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-3">
+                                    <img src="https://randomuser.me/api/portraits/men/67.jpg" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-medium">Roberto Santos</p>
+                                    <p class="text-sm text-gray-500">3 semanas atrás</p>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-3">Samsung Galaxy S20 FE 128GB + R$ 100,00</p>
+                            <div class="flex justify-between">
+                                <span class="text-indigo-600 font-medium">Avaliação: 4.2/5</span>
+                                <button class="px-4 py-1 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700">
+                                    Responder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="reviews" class="tab-content">
+                    <div class="bg-white p-6 rounded-lg shadow-sm">
+                        <h3 class="font-semibold mb-4">Avaliações do vendedor</h3>
+                        
+                        <div class="flex items-center mb-6">
+                            <div class="mr-4 text-center">
+                                <p class="text-4xl font-bold">4.7</p>
+                                <div class="flex justify-center text-yellow-400">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                                <p class="text-sm text-gray-500">12 avaliações</p>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center mb-1">
+                                    <span class="w-10 text-sm text-gray-500">5 estrelas</span>
+                                    <div class="flex-1 mx-2 h-2 bg-gray-200 rounded-full">
+                                        <div class="h-2 bg-yellow-400 rounded-full" style="width: 80%"></div>
+                                    </div>
+                                    <span class="text-sm text-gray-500">8</span>
+                                </div>
+                                <div class="flex items-center mb-1">
+                                    <span class="w-10 text-sm text-gray-500">4 estrelas</span>
+                                    <div class="flex-1 mx-2 h-2 bg-gray-200 rounded-full">
+                                        <div class="h-2 bg-yellow-400 rounded-full" style="width: 15%"></div>
+                                    </div>
+                                    <span class="text-sm text-gray-500">3</span>
+                                </div>
+                                <div class="flex items-center mb-1">
+                                    <span class="w-10 text-sm text-gray-500">3 estrelas</span>
+                                    <div class="flex-1 mx-2 h-2 bg-gray-200 rounded-full">
+                                        <div class="h-2 bg-yellow-400 rounded-full" style="width: 5%"></div>
+                                    </div>
+                                    <span class="text-sm text-gray-500">1</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 pt-4">
+                            <div class="flex items-start mb-4">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-3">
+                                    <img src="https://randomuser.me/api/portraits/women/23.jpg" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-medium">Mariana Costa</p>
+                                    <div class="flex text-yellow-400 mb-1">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600">Ótimo vendedor! O produto chegou exatamente como descrito e a troca foi super tranquila. Recomendo!</p>
+                                    <p class="text-sm text-gray-500 mt-1">1 mês atrás</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-gray-300 overflow-hidden mr-3">
+                                    <img src="https://randomuser.me/api/portraits/men/45.jpg" alt="User" class="w-full h-full object-cover">
+                                </div>
+                                <div>
+                                    <p class="font-medium">Ricardo Almeida</p>
+                                    <div class="flex text-yellow-400 mb-1">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="far fa-star"></i>
+                                    </div>
+                                    <p class="text-gray-600">Produto como anunciado, mas a entrega demorou um pouco mais que o combinado. De qualquer forma, satisfeito com a troca.</p>
+                                    <p class="text-sm text-gray-500 mt-1">2 meses atrás</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Página de Categoria - Eletrônicos -->
+    <div id="category-electronics-page" class="hidden">
+        <main class="container mx-auto px-4 py-8">
+            <div class="breadcrumb">
+                <a href="index.html">Início</a>
+                <span>/</span>
+                <a href="products.html">Produtos</a>
+                <span>/</span>
+                <span>Eletrônicos</span>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Filtros -->
+                <div class="w-full md:w-1/4">
+                    <div class="filter-section">
+                        <div class="filter-title">
+                            <span>Subcategorias</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-smartphones" checked>
+                                <label for="sub-smartphones">Smartphones</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-notebooks">
+                                <label for="sub-notebooks">Notebooks</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-tablets">
+                                <label for="sub-tablets">Tablets</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-games">
+                                <label for="sub-games">Games</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <div class="filter-title">
+                            <span>Marca</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-apple">
+                                <label for="brand-apple">Apple</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-samsung" checked>
+                                <label for="brand-samsung">Samsung</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-xiaomi">
+                                <label for="brand-xiaomi">Xiaomi</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-sony">
+                                <label for="brand-sony">Sony</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <div class="filter-title">
+                            <span>Preço</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="price-free">
+                                <label for="price-free">Somente troca</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="price-cash" checked>
+                                <label for="price-cash">Troca + dinheiro</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Produtos -->
+                <div class="w-full md:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-800">Eletrônicos</h1>
+                        <div class="flex items-center">
+                            <span class="mr-2 text-sm text-gray-600">Ordenar por:</span>
+                            <select class="border rounded-md px-3 py-1 text-sm">
+                                <option>Mais recentes</option>
+                                <option>Mais populares</option>
+                                <option>Melhor avaliados</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Product 1 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1546868871-7041f2a55e12?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Smartphone" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                    Eletrônicos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">iPhone 11 64GB</h3>
+                                <p class="text-gray-600 text-sm mb-3">Bom estado, com capa e película</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Notebook</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 2 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Notebook" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                    Eletrônicos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">MacBook Pro 2017</h3>
+                                <p class="text-gray-600 text-sm mb-3">128GB SSD, 8GB RAM</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: iPhone</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 3 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1593642632823-8f785ba67e45?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Tablet" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                    Eletrônicos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">iPad 8ª Geração</h3>
+                                <p class="text-gray-600 text-sm mb-3">32GB, Wi-Fi, Prateado</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Kindle</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 4 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1607853202273-797f1c22a38e?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Console" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                    Eletrônicos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">PlayStation 4 Slim</h3>
+                                <p class="text-gray-600 text-sm mb-3">1TB, 2 controles, 5 jogos</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Xbox One</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 5 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Smartphone" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                    Eletrônicos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Samsung Galaxy S20</h3>
+                                <p class="text-gray-600 text-sm mb-3">128GB, Azul, com capa</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: iPhone 11</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 6 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1592155931584-901ac15763e3?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Smartwatch" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-indigo-600 text-white text-xs px-2 py-1 rounded">
+                                    Eletrônicos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Apple Watch Series 3</h3>
+                                <p class="text-gray-600 text-sm mb-3">GPS, 38mm, Prateado</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Fones sem fio</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="pagination mt-8">
+                        <a href="#" class="page-item">
+                            <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link active">1</span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link">2</span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link">3</span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Página de Categoria - Instrumentos -->
+    <div id="category-instruments-page" class="hidden">
+        <main class="container mx-auto px-4 py-8">
+            <div class="breadcrumb">
+                <a href="index.html">Início</a>
+                <span>/</span>
+                <a href="products.html">Produtos</a>
+                <span>/</span>
+                <span>Instrumentos Musicais</span>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Filtros -->
+                <div class="w-full md:w-1/4">
+                    <div class="filter-section">
+                        <div class="filter-title">
+                            <span>Subcategorias</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-guitars" checked>
+                                <label for="sub-guitars">Guitarras/Violões</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-pianos">
+                                <label for="sub-pianos">Teclados/Pianos</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-drums">
+                                <label for="sub-drums">Baterias/Percussão</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-wind">
+                                <label for="sub-wind">Sopro</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <div class="filter-title">
+                            <span>Marca</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-giannini">
+                                <label for="brand-giannini">Giannini</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-yamaha" checked>
+                                <label for="brand-yamaha">Yamaha</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-fender">
+                                <label for="brand-fender">Fender</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="brand-gibson">
+                                <label for="brand-gibson">Gibson</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <div class="filter-title">
+                            <span>Condição</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="cond-new-instr">
+                                <label for="cond-new-instr">Novo</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cond-good-instr" checked>
+                                <label for="cond-good-instr">Bom estado</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="cond-used-instr">
+                                <label for="cond-used-instr">Usado</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Produtos -->
+                <div class="w-full md:w-3/4">
+                    <div class="flex justify-between items-center mb-6">
+                        <h1 class="text-2xl font-bold text-gray-800">Instrumentos Musicais</h1>
+                        <div class="flex items-center">
+                            <span class="mr-2 text-sm text-gray-600">Ordenar por:</span>
+                            <select class="border rounded-md px-3 py-1 text-sm">
+                                <option>Mais recentes</option>
+                                <option>Mais populares</option>
+                                <option>Melhor avaliados</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- Product 1 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Violão" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded">
+                                    Instrumentos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Violão Giannini N10</h3>
+                                <p class="text-gray-600 text-sm mb-3">Com case, cordas novas</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Guitarra</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 2 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Guitarra" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded">
+                                    Instrumentos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Guitarra Strato Fender</h3>
+                                <p class="text-gray-600 text-sm mb-3">Modelo Mexicana, com amplificador</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Baixo</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 3 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Teclado" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded">
+                                    Instrumentos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Teclado Yamaha PSR-E363</h3>
+                                <p class="text-gray-600 text-sm mb-3">61 teclas, semi-weighted</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Violino</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 4 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Bateria" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded">
+                                    Instrumentos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Bateria Pearl Export</h3>
+                                <p class="text-gray-600 text-sm mb-3">5 peças, com pratos</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Guitarra + pedal</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 5 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Saxofone" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded">
+                                    Instrumentos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Saxofone Alto Yamaha</h3>
+                                <p class="text-gray-600 text-sm mb-3">Modelo YAS-280, com estojo</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Trompete</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Product 6 -->
+                        <a href="product-detail.html" class="product-card bg-white rounded-lg overflow-hidden block">
+                            <div class="relative h-48 bg-gray-200 overflow-hidden">
+                                <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" alt="Violino" class="w-full h-full object-cover">
+                                <div class="absolute top-2 right-2 bg-teal-600 text-white text-xs px-2 py-1 rounded">
+                                    Instrumentos
+                                </div>
+                            </div>
+                            <div class="p-4">
+                                <h3 class="font-semibold text-lg mb-1">Violino Stradivarius Réplica</h3>
+                                <p class="text-gray-600 text-sm mb-3">Com arco e case</p>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-indigo-600 font-medium">Troca por: Flauta transversal</span>
+                                    <button class="text-gray-500 hover:text-indigo-600 btn-favorito">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="pagination mt-8">
+                        <a href="#" class="page-item">
+                            <span class="page-link"><i class="fas fa-chevron-left"></i></span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link active">1</span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link">2</span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link">3</span>
+                        </a>
+                        <a href="#" class="page-item">
+                            <span class="page-link"><i class="fas fa-chevron-right"></i></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Página de Categoria - Vestuário -->
+    <div id="category-clothing-page" class="hidden">
+        <main class="container mx-auto px-4 py-8">
+            <div class="breadcrumb">
+                <a href="index.html">Início</a>
+                <span>/</span>
+                <a href="products.html">Produtos</a>
+                <span>/</span>
+                <span>Vestuário</span>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-8">
+                <!-- Filtros -->
+                <div class="w-full md:w-1/4">
+                    <div class="filter-section">
+                        <div class="filter-title">
+                            <span>Subcategorias</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-male" checked>
+                                <label for="sub-male">Masculino</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-female">
+                                <label for="sub-female">Feminino</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-kids">
+                                <label for="sub-kids">Infantil</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="sub-shoes">
+                                <label for="sub-shoes">Calçados</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <div class="filter-title">
+                            <span>Tamanho</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="size-p">
+                                <label for="size-p">P</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="size-m" checked>
+                                <label for="size-m">M</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="size-g">
+                                <label for="size-g">G</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="size-gg">
+                                <label for="size-gg">GG</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section mt-4">
+                        <div class="filter-title">
+                            <span>Tipo</span>
+                            <i class="fas fa-chevron-down text-sm"></i>
+                        </div>
+                        <div class="filter-options">
+                            <div class="filter-option">
+                                <input type="checkbox" id="type-casual" checked>
+                                <label for="type-casual">Casual</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="type-sport">
+                                <label for="type-sport">Esportivo</label>
+                            </div>
+                            <div class="filter-option">
+                                <input type="checkbox" id="type-formal">
+                                <label for="type-formal">Social</label>
+                            </div>
+
+    <!--Funcionalidade de alternância do botão de favoritos (coração)-->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const favoriteButtons = document.querySelectorAll('.btn-favorito');
+    favoriteButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const icon = button.querySelector('i');
+            if (icon && icon.classList.contains('far')) {
+                icon.classList.remove('far');
+                icon.classList.add('fas', 'text-red-500');
+            } else if (icon) {
+                icon.classList.remove('fas', 'text-red-500');
+                icon.classList.add('far');
+            }
+        });
+    });
+});
+</script>
+
+</body>
+</html>

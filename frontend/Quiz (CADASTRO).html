@@ -9,7 +9,7 @@
 <body>
 
     <video autoplay loop muted id="video-fundo">
-        <source src="Vídeo_de_Trocas_Animadas_Criado.mp4" type="video/mp4">
+        <source src="/material/Vídeo_de_Trocas_Animadas_Criado.mp4" type="video/mp4">
         Seu navegador não suporta a tag de vídeo
     </video>
 
@@ -27,9 +27,10 @@
         </div>
     </div>
 
-    <audio id="erroSound" src="somDeErro.mp3"></audio>
-    <audio id="successSound" src="somDeAcerto.mp3"></audio>
-    <audio id="finalSound" src="somFinal.mp3"></audio>
+    <audio id="erroSound" src="/material/somDeErro.mp3"></audio>
+    <audio id="successSound" src="/material/somDeAcerto.mp3"></audio>
+    <audio id="badEndSound" src="/material/badEndSound.mp3"></audio>
+    <audio id="goodEndSound" src="/material/goodEndFinal.mp3"></audio>
 
 <script>
 const perguntas = [
@@ -112,10 +113,14 @@ function mostrarResultado() {
     `;
 
     
-    if (erros > acertos) {
-        document.getElementById("badEndSound").play(0.1); // Toca som Final
-    } else{
-        document.getElementById("goodEndSound").play(0.1); // Toca som de Erro
+    if (acertos > erros) {
+        setTimeout(() => {
+            document.getElementById("goodEndSound").play();
+        }, 500); // 1000 ms = 1 segundo de delay
+    } else {
+        setTimeout(() => {
+            document.getElementById("badEndSound").play();
+        }, 500); // 500 ms = 0.5 segundo de delay
     }
 }
 
