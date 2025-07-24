@@ -85,7 +85,7 @@ async function obterRespostaDaIA(provedor) {//Função para obter a resposta da 
 
 // Integração com backend Gemini
 async function obterRespostaDoGemini() {
-    const apiUrl = `http://localhost:3000/api/chat`; //Endpoint local
+    const apiUrl = `http://localhost:3000/api/Chat`; //Endpoint local corrigido (C maiúsculo)
 
     //Configura requisição
     const response = await fetch(apiUrl, {

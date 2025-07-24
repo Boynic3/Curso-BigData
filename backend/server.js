@@ -40,14 +40,16 @@ app.post('/api/Chat', async (req, res) => {
 
         if (!geminiResponse.ok) { //Se der erro na API do Google, vamos ver o que ela respondeu
             const errorText = await geminiResponse.text(); //Pega o texto de erro da resposta
-            console.error("Erro na API do Gemini:", errorBody); //Exibe o erro no console;
+            console.error("Erro na API do Gemini:", errorText); // Corrigido o nome da variável
             throw new Error(`Erro na API externa: ${geminiResponse.statusText}`); //Lança um erro com o status da resposta e o texto de erro
         } //Fim da verificação da resposta
 
         const result = await geminiResponse.json(); //Converte a resposta da API para JSON
+        // Log detalhado para depuração
+        console.log('Resposta bruta da API Gemini:', JSON.stringify(result, null, 2));
 
         //Verificação de segurança para garantir que a resposta existe
-        if (result.candidates && result.candidateslength > 0 && result.candidates[0].content.parts.length > 0) {
+        if (result.candidates && result.candidates.length > 0 && result.candidates[0].content.parts.length > 0) {
             const respostaIA = result.candidates[0].content.parts[0].text; //Pega o texto da resposta da IA
             return res.json({ resposta: respostaIA }); //Retorna a resposta da IA para o cliente no front-end
         } else {
