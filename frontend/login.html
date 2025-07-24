@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scambo - Login</title>
+    <link rel="stylesheet" href="cadastro&login.css">
+</head>
+<body>
+
+    <video autoplay loop muted id="video-fundo">
+        <source src="/material/videoCadastro.mp4" type="video/mp4">
+        Seu navegador não suporta a tag de vídeo
+    </video>
+
+    <div class="container">
+        <h1>Bem-vindo de volta à Scambo</h1>
+        <p>Faça login para acessar sua conta</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">E-mail*</label>
+                <input type="email" id="email" name="email" required>
+                <span class="error-message" id="email-error"></span>
+            </div>
+            
+            <div class="form-group">
+                <label for="senha">Senha*</label>
+                <input type="password" id="senha" name="senha" required>
+                <span class="error-message" id="senha-error"></span>
+            </div>
+            
+            <div class="form-group checkbox-group">
+                <input type="checkbox" id="lembrar" name="lembrar">
+                <label for="lembrar">Lembrar de mim</label>
+            </div>
+            
+            <button type="submit" id="submit-btn">Entrar</button>
+        </form>
+        
+        <div class="login-link">
+            Não tem uma conta? <a href="cadastro.html">Cadastre-se</a>
+        </div>
+    </div>
+    
+    <div id="success-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Login realizado com sucesso!</h2>
+            <p>Bem-vindo(a) de volta à nossa comunidade de trocas.</p>
+            <button id="go-to-dashboard">Ir para o dashboard</button>
+        </div>
+    </div>
+
+<script>
+// Elementos do formulário
+const loginForm = document.getElementById("loginForm");
+const successModal = document.getElementById("success-modal");
+const closeModal = document.querySelector(".close-modal");
+const goToDashboard = document.getElementById("go-to-dashboard");
+
+// Função para validar o formulário
+function validarFormulario() {
+    let valido = true;
+    
+    // Validação do email
+    const email = document.getElementById("email").value;
+    if(!email.includes("@") || !email.includes(".")) {
+        document.getElementById("email-error").textContent = "Digite um e-mail válido";
+        valido = false;
+    } else {
+        document.getElementById("email-error").textContent = "";
+    }
+    
+    // Validação da senha
+    const senha = document.getElementById("senha").value;
+    if(senha.length < 6) {
+        document.getElementById("senha-error").textContent = "Senha deve ter pelo menos 6 caracteres";
+        valido = false;
+    } else {
+        document.getElementById("senha-error").textContent = "";
+    }
+    
+    return valido;
+}
+
+// Função para mostrar o modal de sucesso
+function mostrarModalSucesso() {
+    successModal.classList.remove("hidden");
+}
+
+// Função para fechar o modal
+function fecharModal() {
+    successModal.classList.add("hidden");
+}
+
+// Evento de submit do formulário
+loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+    
+    if(validarFormulario()) {
+        mostrarModalSucesso();
+        loginForm.reset();
+    }
+});
+
+// Eventos do modal
+closeModal.addEventListener("click", fecharModal);
+goToDashboard.addEventListener("click", function() {
+    fecharModal();
+    // Redirecionar para dashboard
+    window.location.href = "#";
+});
+</script>
+
+<script>
+
+</script>
+
+</body>
+</html>
