@@ -18,7 +18,7 @@ const seletorIA = document.getElementById('seletor-ia');      //Seletor para esc
 let historicoChat = [];
 
 const CHAVES_API = {
-    gemini: "AIzaSyDYzEJROEInI12DL8Jr62qt5dYiRWIw9xQ", //Chave da API do Gemini
+    gemini: "SUA_CHAVE_GEMINI_AQUI", //Chave da API do Gemini
     claude: "SUA_CHAVE_CLAUDE_AQUI", //Chave da API do Claude (ainda não configurada)
 
 };                           //Fim das chaves de API
